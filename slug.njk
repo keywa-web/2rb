@@ -1,0 +1,35 @@
+---
+layout: base.njk
+pagination:
+  data: pages
+  size: 1
+  alias: pageData
+permalink: "/{{ pageData.slug | slugify }}/index.html"
+title: "{{ pageData.title }}"
+---
+
+<header class="header">
+    <h1 class="logo-text">{{ pageData.title }}</h1>
+    {% if settings.tagline %}<p class="tagline">{{ settings.tagline }}</p>{% endif %}
+</header>
+
+<main class="links-container">
+    {%- for link in pageData.links -%}
+    <a href="{{ link.url }}" class="link-button" target="_blank" rel="noopener noreferrer">
+        {% if link.icon_url %}
+          <img src="{{ link.icon_url }}" alt="" class="link-icon">
+        {% endif %}
+        <span class="link-text">{{ link.text }}</span>
+    </a>
+    {%- endfor -%}
+</main>
+
+<footer class="social-footer">
+    {% if settings.twitter_url %}<a href="{{ settings.twitter_url }}" aria-label="Twitter"><i class="fab fa-twitter"></i></a>{% endif %}
+    {% if settings.tiktok_url %}<a href="{{ settings.tiktok_url }}" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>{% endif %}
+    {% if settings.instagram_url %}<a href="{{ settings.instagram_url }}" aria-label="Instagram"><i class="fab fa-instagram"></i></a>{% endif %}
+    {% if settings.spotify_url %}<a href="{{ settings.spotify_url }}" aria-label="Spotify"><i class="fab fa-spotify"></i></a>{% endif %}
+    {% if settings.twitch_url %}<a href="{{ settings.twitch_url }}" aria-label="Twitch"><i class="fab fa-twitch"></i></a>{% endif %}
+    {% if settings.facebook_url %}<a href="{{ settings.facebook_url }}" aria-label="Facebook"><i class="fab fa-facebook"></i></a>{% endif %}
+    {% if settings.email_address %}<a href="{{ settings.email_address }}" aria-label="Email"><i class="fas fa-envelope"></i></a>{% endif %}
+</footer>
