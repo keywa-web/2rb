@@ -11,6 +11,9 @@ title: "{{ pageData.title }}"
 <header class="header">
     <h1 class="logo-text">{{ pageData.title }}</h1>
     {% if settings.tagline %}<p class="tagline">{{ settings.tagline }}</p>{% endif %}
+<div class="search-container">
+        <input type="search" id="search-input" placeholder="Cari tautan..." autocomplete="off">
+    </div>
 </header>
 
 <main class="links-container">
@@ -23,6 +26,8 @@ title: "{{ pageData.title }}"
     </a>
     {%- endfor -%}
 </main>
+
+<div id="search-results-container"></div>
 
 <footer class="social-footer">
     {% if settings.twitter_url %}<a href="{{ settings.twitter_url }}" aria-label="Twitter"><i class="fab fa-twitter"></i></a>{% endif %}

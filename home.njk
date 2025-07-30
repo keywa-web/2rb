@@ -16,6 +16,9 @@ title: "Beranda"
         <h1 class="logo-text">{{ settings.page_title }}</h1>
     {% endif %}
     {% if settings.tagline %}<p class="tagline">{{ settings.tagline }}</p>{% endif %}
+    <div class="search-container">
+        <input type="search" id="search-input" placeholder="Cari tautan..." autocomplete="off">
+    </div>
 </header>
 
 <main class="links-container">
@@ -33,6 +36,8 @@ title: "Beranda"
         {% endif %}
     {%- endfor -%}
 </main>
+
+<div id="search-results-container"></div>
 
 <footer class="social-footer">
     {% if settings.twitter_url %}<a href="{{ settings.twitter_url }}" aria-label="Twitter"><i class="fab fa-twitter"></i></a>{% endif %}
