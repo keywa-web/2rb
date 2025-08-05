@@ -40,37 +40,6 @@ module.exports = function(eleventyConfig) {
       });
   });
 
-// === EVENT SETELAH BUILD SELESAI ===
-  eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
-    // Hanya jalankan saat proses build di server (seperti di Cloudflare)
-    if (runMode === 'build') {
-      console.log('Build selesai. Memulai proses unggah data shortlink ke KV...');
-      
-      const shortlinksDataPath = path.join(dir.data, 'shortlinks.js');
-      const getShortlinks = require(shortlinksDataPath);
-      
-      const shortlinks = await getShortlinks();
-      
-      for (const key in shortlinks) {
-        const value = shortlinks[key];
-        // Gunakan Wrangler CLI untuk memasukkan setiap key-value ke KV
-        const command = `npx wrangler kv:key put --namespace-id="ID_NAMESPACE_ANDA_DI_SINI" "${key}" "${value}"`;
-        
-        exec(command, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error unggah KV untuk key '${key}':`, error);
-            return;
-          }
-          if (stderr) {
-            console.error(`Stderr unggah KV untuk key '${key}':`, stderr);
-          }
-          console.log(`Berhasil mengunggah key: '${key}'`);
-        });
-      }
-    }
-  });
-
-
   // --- 3. Konfigurasi Direktori ---
   // Memberitahu Eleventy di mana folder-folder penting berada.
   return {

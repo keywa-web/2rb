@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx @11ty/eleventy --serve",
     "build": "npx @11ty/eleventy"
+"postbuild": "node upload-kv.js"
   },
   "keywords": [],
   "author": "",

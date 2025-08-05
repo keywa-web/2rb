@@ -2,7 +2,7 @@
 
 [[kv_namespaces]]
 binding = "SHORTLINKS" # Nama variabel yang akan digunakan di dalam fungsi
-id = "ID_NAMESPACE_ANDA_DI_SINI" # ID namespace yang baru saja Anda buat
+id = "cff8bbe24b504838bfea8f9f53d4211f" # ID namespace yang baru saja Anda buat
 
 [[migrations]]
 tag = "v1" # A version tag for this migration
