@@ -1,37 +1,41 @@
 // File: upload-kv.js
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process'); // Gunakan execSync agar lebih mudah dibaca lognya
 
-// Nama binding yang Anda atur di Dasbor Cloudflare (Settings > Functions > KV namespace bindings)
-// Ini adalah NAMA VARIABEL, bukan nama databasenya.
-const BINDING_NAME = 'SHORTLINKS'; 
+// Fungsi untuk menjalankan perintah shell
+function runCommand(command) {
+    const { execSync } = require('child_process');
+    try {
+        execSync(command, { stdio: 'inherit' });
+    } catch (error) {
+        console.error(`Gagal menjalankan perintah: ${command}`, error);
+        process.exit(1);
+    }
+}
 
-// Path ke file JSON yang dihasilkan oleh Eleventy
 const jsonFilePath = path.join(__dirname, '_site', 'data', 'shortlinks.json');
 
 if (!fs.existsSync(jsonFilePath)) {
-  console.log(`File data shortlinks tidak ditemukan di ${jsonFilePath}. Melewati unggah KV.`);
-  process.exit(0);
+    console.log('File shortlinks.json tidak ditemukan. Melewati.');
+    process.exit(0);
 }
 
-try {
-  const shortlinksData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-  console.log('Membaca data shortlinks... memulai unggah ke KV.');
+const shortlinksData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
-  for (const key in shortlinksData) {
-    const value = shortlinksData[key];
-    
-    // Perintah Wrangler yang benar untuk Pages
-    const command = `npx wrangler pages functions kv:key put --binding="${BINDING_NAME}" --key="${key}" --value="${value}" --project-name="2rb"`;
-    
-    console.log(`Menjalankan: ${command}`);
-    execSync(command, { stdio: 'inherit' });
-  }
+// Mengubah objek menjadi array untuk diunggah secara bulk
+const bulkUploadData = Object.entries(shortlinksData).map(([key, value]) => ({
+    key,
+    value: String(value) // Pastikan value adalah string
+}));
 
-  console.log('Proses unggah KV selesai.');
+const bulkFilePath = path.join(__dirname, 'kv_shortlinks_upload.json');
+fs.writeFileSync(bulkFilePath, JSON.stringify(bulkUploadData));
 
-} catch (error) {
-  console.error('Gagal memproses atau mengunggah data KV:', error);
-  process.exit(1);
-}
+console.log('Mengunggah data ke KV...');
+// Ganti NAMA_PROYEK dengan nama proyek Anda di Cloudflare
+runCommand(`npx wrangler pages deployments create _site --project-name="2rb" --branch=main && npx wrangler kv:bulk put SHORTLINKS --path=${bulkFilePath} --project-name="2rb"`);
+
+// Hapus file sementara
+fs.unlinkSync(bulkFilePath);
+
+console.log('Selesai!');
