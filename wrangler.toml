@@ -1,9 +1,0 @@
-# File: wrangler.toml
-
-[[kv_namespaces]]
-binding = "SHORTLINKS" # Nama variabel yang akan digunakan di dalam fungsi
-id = "cff8bbe24b504838bfea8f9f53d4211f" # ID namespace yang baru saja Anda buat
-
-[[migrations]]
-tag = "v1" # A version tag for this migration
-new_classes = ["Everyone"] # Default.
